@@ -9,6 +9,7 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var googleRouter = require("./routes/google");
 var tripAdvisorRouter = require("./routes/tripadvisor");
+var stripeRouter = require("./routes/stripe");
 
 var app = express();
 
@@ -28,5 +29,6 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/google", googleRouter);
 app.use("/tripadvisor", tripAdvisorRouter);
+app.use("/stripe", stripeRouter);
 
 module.exports = app;
