@@ -12,7 +12,8 @@ var tripAdvisorRouter = require("./routes/tripadvisor");
 var stripeRouter = require("./routes/stripe");
 
 var app = express();
-
+app.set("trust proxy", 1);
+app.enable("trust proxy");
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
