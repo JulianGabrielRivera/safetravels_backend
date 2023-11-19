@@ -3,7 +3,9 @@ const router = express.Router();
 const axios = require("axios");
 
 const stripe = require("stripe")(`${process.env.STRIPE_KEY}`);
-const endpointSecret = "whsec_Xw9HK00uvxCL595WC5Y8YZKskY9ckuAS";
+// const endpointSecret = "whsec_Xw9HK00uvxCL595WC5Y8YZKskY9ckuAS";
+const endpointSecret = "whsec_VQcNyuCrPVaVeETFm222D0ydbcSU25Mj";
+
 const fulfillOrder = (lineItems) => {
   // TODO: fill me in
   console.log("Fulfilling order", lineItems);
