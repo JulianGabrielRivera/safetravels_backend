@@ -11,7 +11,7 @@ router.post("/stripe", async (req, res) => {
   try {
     const product = await stripe.products.retrieve("prod_P28zCO9jHcC8no");
     const session = await stripe.checkout.sessions.create({
-      success_url: "https://example.com/success",
+      success_url: "https://safetravels-frontend.vercel.app/checkout-success",
       line_items: [{ price: "price_1OE4hFFNeaqqGqZ9ogLoxS7S", quantity: 1 }],
       mode: "payment",
     });
