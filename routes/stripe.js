@@ -4,12 +4,9 @@ const axios = require("axios");
 
 const stripe = require("stripe")(`${process.env.STRIPE_KEY}`);
 // const endpointSecret = "whsec_Xw9HK00uvxCL595WC5Y8YZKskY9ckuAS";
-const endpointSecret = "whsec_VQcNyuCrPVaVeETFm222D0ydbcSU25Mj";
+const endpointSecret =
+  "whsec_d0ab13239b6a6016274511a33e9081d65072bfc9421eca63ee4b6f6e2995f05b";
 
-const fulfillOrder = (lineItems) => {
-  // TODO: fill me in
-  console.log("Fulfilling order", lineItems);
-};
 router.post("/stripe", async (req, res) => {
   try {
     const product = await stripe.products.retrieve("prod_P28zCO9jHcC8no");
@@ -26,34 +23,36 @@ router.post("/stripe", async (req, res) => {
   }
 });
 
-router.post("/webhooks", async (request, response) => {
-  const payload = request.body;
+router.post("/webhook", async (request, response) => {
   const sig = request.headers["stripe-signature"];
-  console.log(payload);
+  console.log("shot");
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(payload, sig, endpointSecret);
+    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+    console.log(event, "EVENT");
+    console.log(request.body);
   } catch (err) {
-    return response.status(400).send(`Webhook Error: ${err.message}`);
+    response.status(400).send(`Webhook Error: ${err.message}`);
+    return;
   }
 
-  // Handle the checkout.session.completed event
-  if (event.type === "checkout.session.completed") {
-    // Retrieve the session. If you require line items in the response, you may include them by expanding line_items.
-    const sessionWithLineItems = await stripe.checkout.sessions.retrieve(
-      event.data.object.id,
-      {
-        expand: ["line_items"],
-      }
-    );
-    const lineItems = sessionWithLineItems.line_items;
-
-    // Fulfill the purchase...
-    fulfillOrder(lineItems);
+  // Handle the event
+  switch (event.type) {
+    case "checkout.session.completed":
+      const paymentIntentSucceeded = event.data.object;
+      console.log(event, "event");
+      console.log(request.body);
+      console.log("fired");
+      // Then define and call a function to handle the event payment_intent.succeeded
+      break;
+    // ... handle other event types
+    default:
+      console.log(`Unhandled event type ${event.type}`);
   }
 
-  response.status(200).end();
+  // Return a 200 response to acknowledge receipt of the event
+  response.send();
 });
 
 // router.post("/webhook", async (req, res) => {
